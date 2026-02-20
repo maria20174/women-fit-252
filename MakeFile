@@ -1,0 +1,15 @@
+CC = g++
+tests = $(wildcard *_test.cpp)
+all: clean check format
+clean:
+  rm -f *.o main *.exe
+  @echo "Готово, папка очищена"
+check:
+  clang-format --dry-run --Werror *.cpp *.h
+format:
+  clang-format -i *.cpp *.h
+  @echo "Код отформатирован"
+test:
+  @for f in $(tests:.cpp=); do echo "Запуск $$f..."; ./$$f; done
+%: %.cpp
+  $(CC) -o $@ $<
