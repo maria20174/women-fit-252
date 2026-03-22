@@ -1,15 +1,29 @@
-CC = g++
-tests = $(wildcard *_test.cpp)
-all: clean check format
+CC = gcc
+CFLAGS = -std=c11 - Wall - Wextra - Werror
+
+SRCS = $(wildcard *.c)
+TEST_SRCS = $(wildcard *_test.c)
+TEST_BINS = $(TEST_SRCS:.c=)
+
+.PHONY: all clean fmt fmt-check test
+
+all: $(TEST_BINS)
+
+%: %.c
+        $(CC) $(CFLAGS) -o $@ $<
+
+test: $(TEST_BINS)
+        @for t in $(TEST_BINS); do \
+                echo "Running $$t..."; \
+                ./$$t; \
+        done
+
+fmt: 
+        clang-format -i $(SRCS)
+
+fmt-check:
+        clang-format --dry-run --Werror $(SRCS)
+
 clean:
-  rm -f *.o main *.exe
-  @echo "Готово, папка очищена"
-check:
-  clang-format --dry-run --Werror *.cpp *.h
-format:
-  clang-format -i *.cpp *.h
-  @echo "Код отформатирован"
-test:
-  @for f in $(tests:.cpp=); do echo "Запуск $$f..."; ./$$f; done
-%: %.cpp
-  $(CC) -o $@ $<
+        rm -f $(TEST_BINS)
+
