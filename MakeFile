@@ -1,29 +1,19 @@
-CC = gcc
-CFLAGS = -std=c11 - Wall - Wextra - Werror
-
-SRCS = $(wildcard *.c)
-TEST_SRCS = $(wildcard *_test.c)
-TEST_BINS = $(TEST_SRCS:.c=)
-
-.PHONY: all clean fmt fmt-check test
-
-all: $(TEST_BINS)
-
-%: %.c
-        $(CC) $(CFLAGS) -o $@ $<
-
-test: $(TEST_BINS)
-        @for t in $(TEST_BINS); do \
-                echo "Running $$t..."; \
-                ./$$t; \
-        done
-
-fmt: 
-        clang-format -i $(SRCS)
-
-fmt-check:
-        clang-format --dry-run --Werror $(SRCS)
-
 clean:
-        rm -f $(TEST_BINS)
+	rm -f *.o *.a *_test *.out
 
+check_fmt:
+	clang-format -style=LLVM --dry-run --Werror $$(find . -name "*.c" -o -name "*.h")
+
+fmt:
+	clang-format -style=LLVM -i $$(find . -name "*.c" -o -name "*.h")
+
+test:
+	@files=$$(ls *.c | grep -v "_test.c"); \
+	for test_file in *_test.c; do \
+		executable=$${test_file%.c}; \
+		gcc -Wall -Wextra -Werror $$test_file $$files -o $$executable; \
+	done
+	@for test_bin in *_test; do \
+		echo "Running: $$test_bin"; \
+		./$$test_bin; \
+	done
