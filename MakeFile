@@ -1,5 +1,5 @@
-clean:
-	rm -f *.o *.a *_test *.out
+clear:
+	rm -rf *.o *.a *_test
 
 check_fmt:
 	clang-format -style=LLVM --dry-run --Werror $$(find . -name "*.c" -o -name "*.h")
@@ -7,13 +7,61 @@ check_fmt:
 fmt:
 	clang-format -style=LLVM -i $$(find . -name "*.c" -o -name "*.h")
 
-test:
-	@files=$$(ls *.c | grep -v "_test.c"); \
-	for test_file in *_test.c; do \
-		executable=$${test_file%.c}; \
-		gcc -Wall -Wextra -Werror $$test_file $$files -o $$executable; \
-	done
-	@for test_bin in *_test; do \
-		echo "Running: $$test_bin"; \
-		./$$test_bin; \
-	done
+# --- task4
+task4.o: task4/include/task4.h task4/src/task4.c
+	gcc -g -c task4/src/task4.c -o task4.o
+
+task4.a: task4.o
+	ar rc task4.a task4.o
+
+task4_test.o: task4/src/test.c
+	gcc -g -c task4/src/test.c -o task4_test.o
+
+task4_test: task4_test.o task4.a
+	gcc -g -static -o task4_test task4_test.o task4.a
+
+# --- task5
+task5.o: task5/include/task5.h task5/src/task5.c
+	gcc -g -c task5/src/task5.c -o task5.o
+
+task5.a: task5.o
+	ar rc task5.a task5.o
+
+task5_test.o: task5/src/test.c
+	gcc -g -c task5/src/test.c -o task5_test.o
+
+task5_test: task5_test.o task5.a
+	gcc -g -static -o task5_test task5_test.o task5.a
+
+# --- task6
+task6.o: task6/include/task6.h task6/src/task6.c
+	gcc -g -c task6/src/task6.c -o task6.o
+
+task6.a: task6.o
+	ar rc task6.a task6.o
+
+task6_test.o: task6/src/test.c
+	gcc -g -c task6/src/test.c -o task6_test.o
+
+task6_test: task6_test.o task6.a
+	gcc -g -static -o task6_test task6_test.o task6.a
+
+# --- task7
+task7.o: task7/include/task7.h task7/src/task7.c
+	gcc -g -c task7/src/task7.c -o task7.o
+
+task7.a: task7.o
+	ar rc task7.a task7.o
+
+task7_test.o: task7/src/test.c
+	gcc -g -c task7/src/test.c -o task7_test.o
+
+task7_test: task7_test.o task7.a
+	gcc -g -static -o task7_test task7_test.o task7.a
+
+# --- test
+test: task4_test task5_test task6_test task7_test
+	./task4_test
+	./task5_test
+	./task6_test
+	./task7_test
