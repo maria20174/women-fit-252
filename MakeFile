@@ -1,38 +1,23 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -std=c11 -g
 LDFLAGS = -lm
-
-ALL_FILES = $(shell find . -regex ".*\.[ch]")
-
-.PHONY: all clean test run-tests fmt check_fmt
-
+TEST_BINS = $(patsubst %.c,%,$(shell find . -name "*_test.c" -o -name "test.c" 2>/dev/null))
+ALL_C = $(shell find . -name "*.c" 2>/dev/null)
+.PHONY: all clean test run-tests fmt fmt-check
 all: run-tests
-
-quadratic_test: quadratic_test.c quadratic.c quadratic.h
-	$(CC) $(CFLAGS) -o $@ $< quadratic.c $(LDFLAGS)
-
-integr_test: task5/src/test5.c task5/src/integr.c task5/include/integr.h
-	$(CC) $(CFLAGS) -Itask5/include -o $@ $< task5/src/integr.c $(LDFLAGS)
-
-stack_test: task7/src/test.c task7/src/stack.c task7/include/stack.h
-	$(CC) $(CFLAGS) -Itask7/include -o $@ $< task7/src/stack.c
-
-test: quadratic_test integr_test stack_test
-
+test: $(TEST_BINS)
+%: %.c
+	$(CC) $(CFLAGS) -I$(shell dirname $<)/../include -o $@ $^ $(LDFLAGS)
 run-tests: test
-	@echo "=== Running Quadratic Test ==="
-	./quadratic_test
-	@echo "=== Running Integral Test ==="
-	./integr_test
-	@echo "=== Running Stack Test ==="
-	./stack_test
+	@for test in $(TEST_BINS); do \
+		echo "=== Running $$test ==="; \
+		./$$test || exit 1; \
+	done
 	@echo "=== All tests passed! ==="
-
-check_fmt:
-	@clang-format -style=LLVM --dry-run --Werror $(ALL_FILES)
-
 fmt:
-	@clang-format -style=LLVM -i $(ALL_FILES)
-
+	@clang-format -style=LLVM -i $$(find . -regex ".*\.[ch]" 2>/dev/null)
+fmt-check:
+	@clang-format -style=LLVM --dry-run --Werror $$(find . -regex ".*\.[ch]" 2>/dev/null)
 clean:
-	rm -f quadratic_test integr_test stack_test *.o *.a *.out
+	@find . -type f -executable -delete 2>/dev/null || true
+	@rm -f *.o *.a *.out
