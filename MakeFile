@@ -31,3 +31,5 @@ fmt-check:
 clean:
 	@find . -type f -executable -delete 2>/dev/null || true
 	@rm -f *.o *.a *.out
+	
+	
