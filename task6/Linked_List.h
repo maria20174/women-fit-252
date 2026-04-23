@@ -24,3 +24,4 @@ size_t list_size(const LinkedList* list);
 void list_print(const LinkedList* list);
 
 #endif
+

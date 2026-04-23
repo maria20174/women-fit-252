@@ -143,4 +143,5 @@ void list_print(const LinkedList* list) {
         current = current->next;
     }
     printf("NULL\n");
+    
 }
