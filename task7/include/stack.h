@@ -20,4 +20,4 @@ bool stack_append(Stack* s, int a);
 bool stack_delete(Stack* s, int* out);
 
 
-#endif 
+#endif
