@@ -10,7 +10,7 @@ test: $(TEST_BINS)
 	$(CC) $(CFLAGS) -I$(shell dirname $<)/../include -o $@ $^ $(LDFLAGS)
 run-tests: test
 	@for test in $(TEST_BINS); do \
-		echo "=== Running $$test ==="; \
+		echo "=== Runningitg $$test ==="; \
 		./$$test || exit 1; \
 	done
 	@echo "=== All tests passed! ==="
