@@ -27,7 +27,6 @@ void init(PoolCtx* ctx, void* buffer, size_t buffer_size, size_t block_size) {
         ctx->free_block = node;
     }
 }
-
 void* alloc(PoolCtx* ctx) {
     if (!ctx || !ctx->free_block)
     {
@@ -37,7 +36,6 @@ void* alloc(PoolCtx* ctx) {
     ctx->free_block = node->next;
     return (void*)node;
 }
-
 void free(PoolCtx* ctx, void* address) {
     if (!ctx || !address)
     {
