@@ -1,5 +1,4 @@
 #include "linear_allocator.h"
-
 #define LEVELLING_8(x) (((x) + 7) & ~7)
 
 void l_init(LinearCtx* ctx, void* buffer, size_t size) 

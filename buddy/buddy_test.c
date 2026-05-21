@@ -3,6 +3,8 @@
 #include <string.h>
 #include <assert.h>
 #include "buddy_allocator.h"
+#include "buddy_allocator.c"
+
 void test_buddy_1() 
 {
     char buffer[4096];

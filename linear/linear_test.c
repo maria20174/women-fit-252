@@ -3,6 +3,7 @@
 #include <string.h>
 #include <assert.h>
 #include "linear_allocator.h"
+#include "linear_allocator.c"
 
 void test_linear_1() 
 {

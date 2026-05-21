@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "pool_allocator.h"
+#include "pool_allocator.c"
 
 void test_pool_1() 
 {
