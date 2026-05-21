@@ -7,7 +7,7 @@ static size_t block_size(BuddyCtx* ctx, int order)
 {
     return ctx->min_block* (1 << order);
 }
-void init(BuddyCtx* ctx, void* buffer, size_t size, size_t min_block_size) {
+void b_init(BuddyCtx* ctx, void* buffer, size_t size, size_t min_block_size) {
     if (!ctx || !buffer || size == 0) 
     {
         return;
@@ -35,14 +35,14 @@ void init(BuddyCtx* ctx, void* buffer, size_t size, size_t min_block_size) {
     initial->next_free = NULL;
     ctx->free_block[ctx->max_order] = initial;
 }
-void* alloc(BuddyCtx* ctx, size_t bytes) {
+void* b_alloc(BuddyCtx* ctx, size_t bytes) {
     if (!ctx || bytes == 0)
     {
         return NULL;
     }
     size_t total = LEVELLING_8(bytes + sizeof(Block));
     int need_order = 0;
-    while (get_block_size(ctx, need_order) < total && need_order < ctx->max_order) 
+    while (get_size(ctx, need_order) < total && need_order < ctx->max_order) 
     {
         need_order++;
     }
@@ -71,7 +71,7 @@ void* alloc(BuddyCtx* ctx, size_t bytes) {
     block->is_free = 0;
     return (void*)((char*)block + sizeof(Block));
 }
-void free(BuddyCtx* ctx, void* address) 
+void b_free(BuddyCtx* ctx, void* address) 
 {
     if (!ctx || !address)
     {
@@ -87,19 +87,19 @@ void free(BuddyCtx* ctx, void* address)
     block->next_free = ctx->free_block[order];
     ctx->free_block[order] = block;
 }
-void* realloc(BuddyCtx* ctx, void* address, size_t new_size) {
+void* b_realloc(BuddyCtx* ctx, void* address, size_t new_size) {
     if (!address) return buddy_alloc(ctx, new_size);
     if (new_size == 0) 
     {
         free(ctx, address);
         return NULL;
     }
-    void* new_ptr = alloc(ctx, new_size);
+    void* new_ptr = b_alloc(ctx, new_size);
     if (!new_ptr)
     {
         return NULL;
     }
     memcpy(new_ptr, address, new_size); 
-    buddy_free(ctx, address);
+    b_free(ctx, address);
     return new_ptr;
 }

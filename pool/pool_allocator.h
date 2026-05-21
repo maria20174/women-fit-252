@@ -14,8 +14,8 @@ typedef struct {
     Node* free_block;
 } PoolCtx;
 
-void init(PoolCtx* ctx, void* buffer, size_t buffer_size, size_t block_size);
-void* alloc(PoolCtx* ctx);
-void free(PoolCtx* ctx, void* ptr);
+void p_init(PoolCtx* ctx, void* buffer, size_t buffer_size, size_t block_size);
+void* p_alloc(PoolCtx* ctx);
+void p_free(PoolCtx* ctx, void* ptr);
 
 #endif

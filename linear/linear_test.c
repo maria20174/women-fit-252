@@ -8,9 +8,9 @@ void test_linear_1()
 {
     char buffer[1024];
     LinearCtx ctx;
-    init(&ctx, buffer, sizeof(buffer));
-    void* p1 = alloc(&ctx, 10);
-    void* p2 = alloc(&ctx, 20);
+    l_init(&ctx, buffer, sizeof(buffer));
+    void* p1 = l_alloc(&ctx, 10);
+    void* p2 = l_alloc(&ctx, 20);
     assert(p1 != NULL);
     assert(p2 != NULL);
     assert(p1 != p2);
@@ -28,10 +28,10 @@ void test_linear_2()
 {
     char buffer[100];
     LinearCtx ctx;
-    init(&ctx, buffer, sizeof(buffer));
-    void* p1 = alloc(&ctx, 90);
+    l_init(&ctx, buffer, sizeof(buffer));
+    void* p1 = l_alloc(&ctx, 90);
     assert(p1 != NULL);
-    void* p2 = alloc(&ctx, 20);
+    void* p2 = l_alloc(&ctx, 20);
     assert(p2 == NULL);
     printf("Тест 2 выполнен\n");
 }
@@ -39,10 +39,10 @@ void test_linear_2()
 void test_linear_3() {
     char buffer[1024];
     LinearCtx ctx;
-    init(&ctx, buffer, sizeof(buffer));
-    void* p1 = alloc(&ctx, 50);
-    reset(&ctx);
-    void* p2 = alloc(&ctx, 50);
+    l_init(&ctx, buffer, sizeof(buffer));
+    void* p1 = l_alloc(&ctx, 50);
+    l_reset(&ctx);
+    void* p2 = l_alloc(&ctx, 50);
     assert(p1 == p2);
     printf("Тест 3 выполнен\n");
 }

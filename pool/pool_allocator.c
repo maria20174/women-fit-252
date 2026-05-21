@@ -2,7 +2,7 @@
 
 #define LEVELLING_8(x) (((x) + 7) & ~7)
 
-void init(PoolCtx* ctx, void* buffer, size_t buffer_size, size_t block_size) {
+void p_init(PoolCtx* ctx, void* buffer, size_t buffer_size, size_t block_size) {
     if (!ctx || !buffer || block_size == 0)
     {
     return;
@@ -27,7 +27,8 @@ void init(PoolCtx* ctx, void* buffer, size_t buffer_size, size_t block_size) {
         ctx->free_block = node;
     }
 }
-void* alloc(PoolCtx* ctx) {
+void* p_alloc(PoolCtx* ctx) 
+{
     if (!ctx || !ctx->free_block)
     {
         return NULL;
@@ -36,7 +37,7 @@ void* alloc(PoolCtx* ctx) {
     ctx->free_block = node->next;
     return (void*)node;
 }
-void free(PoolCtx* ctx, void* address) {
+void p_free(PoolCtx* ctx, void* address) {
     if (!ctx || !address)
     {
         return;

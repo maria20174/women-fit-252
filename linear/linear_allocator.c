@@ -2,7 +2,7 @@
 
 #define LEVELLING_8(x) (((x) + 7) & ~7)
 
-void init(LinearCtx* ctx, void* buffer, size_t size) 
+void l_init(LinearCtx* ctx, void* buffer, size_t size) 
 {
     if (!ctx || !buffer || size == 0) 
     {
@@ -12,7 +12,7 @@ void init(LinearCtx* ctx, void* buffer, size_t size)
     ctx->size = size;
     ctx->offset = 0;
 }
-void* alloc(LinearCtx* ctx, size_t bytes) 
+void* l_alloc(LinearCtx* ctx, size_t bytes) 
 {
     if (!ctx || bytes == 0)
     {
@@ -28,14 +28,14 @@ void* alloc(LinearCtx* ctx, size_t bytes)
     ctx->offset += levelling_bytes;  
     return address;
 }
-void reset(LinearCtx* ctx) 
+void l_reset(LinearCtx* ctx) 
 {
     if (ctx)
     {
         ctx->offset = 0;
     } 
 }
-void free(LinearCtx* ctx, void* address) 
+void l_free(LinearCtx* ctx, void* address) 
 {
     (void)ctx; 
     (void)address;
