@@ -1,4 +1,3 @@
-#include "linear_allocator.c"
 #include "linear_allocator.h"
 #include <assert.h>
 #include <stdio.h>

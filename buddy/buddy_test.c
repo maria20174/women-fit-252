@@ -1,4 +1,3 @@
-#include "buddy_allocator.c"
 #include "buddy_allocator.h"
 #include <assert.h>
 #include <stdio.h>
@@ -14,6 +13,7 @@ void test_buddy_1() {
   assert(((size_t)p1 % 8) == 0);
   printf("Тест 1 выполнен\n");
 }
+
 void test_buddy_2() {
   char buffer[4096];
   BuddyCtx ctx;
@@ -25,6 +25,7 @@ void test_buddy_2() {
   assert(small != large);
   printf("Тест 2 выполнен\n");
 }
+
 void test_buddy_3() {
   char buffer[4096];
   BuddyCtx ctx;
@@ -37,6 +38,7 @@ void test_buddy_3() {
   b_free(&ctx, p2);
   printf("Тест 3 выполнен\n");
 }
+
 void test_buddy_4() {
   char buffer[128];
   BuddyCtx ctx;

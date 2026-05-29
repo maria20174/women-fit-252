@@ -1,11 +1,13 @@
 #include "buddy_allocator.h"
+#include <stdlib.h>
 #include <string.h>
 
 #define LEVELLING_8(x) (((x) + 7) & ~7)
 
 static size_t block_size(BuddyCtx *ctx, int order) {
-  return ctx->min_block * (1 << order);
+  return ctx->min_block_size * (1 << order);
 }
+
 void b_init(BuddyCtx *ctx, void *buffer, size_t size, size_t min_block_size) {
   if (!ctx || !buffer || size == 0) {
     return;
@@ -15,7 +17,7 @@ void b_init(BuddyCtx *ctx, void *buffer, size_t size, size_t min_block_size) {
     min = LEVELLING_8(sizeof(Block));
   }
   ctx->buffer = (char *)buffer;
-  ctx->min_block = min;
+  ctx->min_block_size = min;
   ctx->max_order = 0;
   size_t temp = size / min;
   while (temp > 1) {
@@ -31,13 +33,14 @@ void b_init(BuddyCtx *ctx, void *buffer, size_t size, size_t min_block_size) {
   initial->next_free = NULL;
   ctx->free_block[ctx->max_order] = initial;
 }
+
 void *b_alloc(BuddyCtx *ctx, size_t bytes) {
   if (!ctx || bytes == 0) {
     return NULL;
   }
   size_t total = LEVELLING_8(bytes + sizeof(Block));
   int need_order = 0;
-  while (get_size(ctx, need_order) < total && need_order < ctx->max_order) {
+  while (block_size(ctx, need_order) < total && need_order < ctx->max_order) {
     need_order++;
   }
   int order = need_order;
@@ -51,7 +54,7 @@ void *b_alloc(BuddyCtx *ctx, size_t bytes) {
   ctx->free_block[order] = block->next_free;
   while (order > need_order) {
     order--;
-    size_t half = get_block_size(ctx, order);
+    size_t half = block_size(ctx, order);
     Block *buddy = (Block *)((char *)block + half);
     buddy->order = order;
     buddy->is_free = 1;
@@ -62,6 +65,7 @@ void *b_alloc(BuddyCtx *ctx, size_t bytes) {
   block->is_free = 0;
   return (void *)((char *)block + sizeof(Block));
 }
+
 void b_free(BuddyCtx *ctx, void *address) {
   if (!ctx || !address) {
     return;
@@ -75,11 +79,12 @@ void b_free(BuddyCtx *ctx, void *address) {
   block->next_free = ctx->free_block[order];
   ctx->free_block[order] = block;
 }
+
 void *b_realloc(BuddyCtx *ctx, void *address, size_t new_size) {
   if (!address)
-    return buddy_alloc(ctx, new_size);
+    return b_alloc(ctx, new_size);
   if (new_size == 0) {
-    free(ctx, address);
+    b_free(ctx, address);
     return NULL;
   }
   void *new_ptr = b_alloc(ctx, new_size);

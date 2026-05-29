@@ -1,4 +1,3 @@
-#include "pool_allocator.c"
 #include "pool_allocator.h"
 #include <assert.h>
 #include <stdio.h>
