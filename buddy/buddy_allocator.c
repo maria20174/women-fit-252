@@ -43,6 +43,9 @@ void *b_alloc(BuddyCtx *ctx, size_t bytes) {
   while (block_size(ctx, need_order) < total && need_order < ctx->max_order) {
     need_order++;
   }
+  if (block_size(ctx, need_order) < total) {
+    return NULL;
+  }
   int order = need_order;
   while (order <= ctx->max_order && ctx->free_block[order] == NULL) {
     order++;
